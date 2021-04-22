@@ -20,13 +20,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name = "Enderecos")
 public class Endereco {
 	public Endereco() { }
-	public Endereco(String logradouro, int numero, String complemento, String bairro, String cidade, String estado,String cep) {
+	public Endereco(String logradouro, int numero, String complemento, String bairro, String cidade, String localidade,String cep) {
 		this.logradouro = logradouro;
 		this.numero = numero;
 		this.complemento = complemento;
 		this.bairro = bairro;
 		this.cidade = cidade;
-		this.estado = estado;
+		this.localidade = localidade;
 		this.cep = cep;
 	}
 	@Id
@@ -44,7 +44,7 @@ public class Endereco {
 	private String cidade;
 	@Column(name = "estado", nullable = false)
 	@Length(min = 2, max = 20)
-	private String estado;
+	private String localidade;
 	@Column(name = "cep", nullable = false)
 	@Pattern(regexp = "[0-9]{5}-[0-9]{3}")
 	private String cep;
@@ -55,6 +55,19 @@ public class Endereco {
 	@JsonIgnore
     private Usuario usuario;
 	
+	
+	@Override
+    public String toString() {
+        return "Endereco{" +
+        		"id='" + id + '\'' +
+                "cep='" + cep + '\'' +
+                ", logradouro='" + logradouro + '\'' +
+                ", complemento='" + complemento + '\'' +
+                ", bairro='" + bairro + '\'' +
+                ", estado='" + localidade + '\'' +
+                ", numero='" + numero + '\'' +
+                '}';
+    }
 	
 	public Usuario getUsuario() {
 		return usuario;
@@ -110,11 +123,11 @@ public class Endereco {
 	}
 	
 	
-	public String getEstado() {
-		return estado;
+	public String getLocalidade() {
+		return localidade;
 	}
-	public void setEstado(String estado) {
-		this.estado = estado;
+	public void setEstado(String localidade) {
+		this.localidade = localidade;
 	}
 	
 	

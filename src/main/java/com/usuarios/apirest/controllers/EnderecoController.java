@@ -6,6 +6,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.usuarios.apirest.models.Endereco;
 import com.usuarios.apirest.repositories.IEnderecoRepository;
 import com.usuarios.apirest.repositories.IUsuarioRepository;
+import com.usuarios.apirest.services.CepService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,6 +32,9 @@ public class EnderecoController {
 	@Autowired
     private IUsuarioRepository usuarioRepository;
 	
+	@Autowired
+    private CepService cepService;
+	
 	@PostMapping("/usuario/{user_id}")
 	@ApiOperation(value = "Cadastra o endereço de determinado usuário")
 	public ResponseEntity<Endereco> cadastraEnderec(@Valid @RequestBody Endereco endRequest, 
@@ -40,7 +45,7 @@ public class EnderecoController {
 									endRequest.getComplemento(),
 									endRequest.getBairro(),
 									endRequest.getCidade(),
-									endRequest.getEstado(),
+									endRequest.getLocalidade(),
 									endRequest.getCep());
 		
 		usuarioRepository.findById(user_id).map(usuario -> {
@@ -50,6 +55,14 @@ public class EnderecoController {
 		
 		return new ResponseEntity<Endereco>(endereco, HttpStatus.CREATED);
 	}
+	
+	@GetMapping("cep/{cep}")
+    public ResponseEntity<Endereco> getCep(@PathVariable String cep) {
+
+        Endereco endereco = cepService.buscaEnderecoPorCep(cep);
+
+        return endereco != null ? ResponseEntity.ok().body(endereco) : ResponseEntity.notFound().build(); 
+    }
 }
 
 
